@@ -1,0 +1,4 @@
+.env
+.apuntes.txt
+dist
+node_modules

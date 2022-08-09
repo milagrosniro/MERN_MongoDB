@@ -1,0 +1,103 @@
+1) Crear 2 carpetas, una para BACK y otra para FRONT
+
+BACK
+
+INSTALACIONES
+
+1) Agragr package.json con npm init -y
+2) Instalar dependencias. En este caso instalamos: npm i express mongoose morgan dotenv cors
+3) Crear una carpeta src y adentro un archivo index.ts
+4) Instalar los modulos de desarrollo: npm i -D typescript @types/express @types/morgan @types/mongoose @types/cors @types/node ts-node-dev
+5) Para que se pueda transpilar el codigo de Ts a Js es necesario crear en el package.json un script llamado build: tsc (cada vez que ejecute el comandobuild se ejecuta el comando tsc). Para esto es necesario que este el archivo tscconfig.json 
+6) Crear el tsc (typescript comand ) para eso ejecutar el comando npx tsc --init 
+7) Editar el tscconfig.json 
+    *"target": "es6"
+    *"rootDir": "./src"
+    *"outDir": "./dist"
+8) Crear script para que el codigo se ejecute con ts-node: "dev": "ts-node-dev src/index.ts" Este comando funciona como nodemon pero para Ts. (npm run dev)
+
+CONSTRUIR API
+
+9) En el archivo index.ts del BACK:
+*Crear el servidor:  se import el servidor app y  luego que app().listen(num puerto, cb que se ejecuta al conectarse). En el index solo se va a hacer la conexion al servidor. 
+En el archivo app.ts se crea el servidor importar express, crear const app con express()
+
+10) CREAR carpeta RUTAS y CONTROLLER
+
+INSTALAR MONGODB
+11)database.ts es el archivo que va a tener la conexion con la base de datos. 
+Para usar Mogodb hay que instalarlo antes, desde la pagina. Una vez instalado debo colocar en las variables de entorno del sistema el erchivo bin del MongoDB para poder ejecutarlo en el sistema
+12) Una vez instalado MongoDB, en el archivo databa.ts hago la conexion: 
+`` 
+//Crear una funcion asyncronica que se autoejecute, donde le digo que se conecte a mongoose, al url de la db. Si no existe, la creara y se conectara 
+(async () => {
+    await mongoose.connect('mongodb://localhost/mern-database', {
+        // Estos son para que no salten Warning en la consola
+        useUnifiedTopology: true,
+        useUrlParser: true
+    })
+})()
+`` 
+Para que esto se ejecute, hay que importar el archivo .database.ts en index(donde se realizan todas las conexiones)
+
+13) Crear las variables de entorno en 'config.ts'
+14)Crear el archivo .env ( tiene que estar guardado al mismo nivel que el package.json)
+15) Crear el archivo .gitignore  ( tiene que estar guardado al mismo nivel que el package.json) donde digo los archvios que quiero que se ignoren:
+.env
+dist 
+node_modules
+
+16) En el archivo app.ts, donde se crea el puerto. Seteo un puerto:
+            app.set('port', 3000)
+17) En el index.ts le digo a app.listen que escuche la variable 'port' :
+            app.listen(app.get('port'), () => {
+                console.log('server on port 3000')
+            })
+
+18) En el archivo .video.ts creo el modelo del Schema del Video:
+import { Schema, model } from "mongoose";
+
+const videoSchema = new Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    description : {
+        type: String,
+        trim: true
+    },
+    url: {
+        type: String,
+        required: true,
+        trim: true
+    }
+},{
+    versionKey: false,
+    timestamps: true // muestra la fecha en la que se crea
+})
+
+export default model('Video', videoSchema) //se guardara en el modelo VIDEO
+
+19) En el archivo donde iran las rutas creo el router:
+        import {Router} from 'express'
+        const router = Router();
+
+20) Importo las rutas en el archivo .app para luego utilizar esas rutas en la app 
+21) en .app agrego el midleware morgan ( que mostrara que rutas fueron solicitadas):
+        app.use(morgan('dev'))
+22) En .app incorporo cors ( que me permite indicar que servidores tienen permitido pedir cosas, en este caso todo el servidor):
+        app.use(cors)
+23) En .app agrego app.use(express.json()) para que pueda interpretar los json dle front y agrego:
+    app.use(express.urlencoded({extended: false}))
+para que cuando envien una peticion POST desde un formulario pueda enteneder los campos que vienen desde ahi 
+24) Crear las rutas 
+
+// FRONTEND
+1) En la carpeta donde esta el proyecto (afuera de api) ejecutar: npx create-react-app frontend --template typescript para crear un proyecto react con typescript  
+2) Eliminar los archivos que no se usan: App.tsx, logo.svg, app.test 
+3) Instalar react-router-dom
+4) en index.tsx colocar las rutas 
+5) Crear componente donde se vera el listado de videos, otro donde se ve el formulario, y otro para mostrar cada video 
+6) Instalar bootswatch : npm i bootswatch para el css e importarlo en index.tsx 
+7) Crear NavLink, para eso se puede buscar en Bootstrap, transformar a codigo tsx y pegar. Cambiar <a></a> por <Link/>. La diferencia entre <a></a> y <Link/> es que el <a></a> siempre trata de interactuar con un backend o de redireccionar. En camnio <Link> utiliza el enrutador interno de la app y no cambia de pagina

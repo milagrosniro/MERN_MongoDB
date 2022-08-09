@@ -1,0 +1,29 @@
+@api = http://localhost:4000
+
+### Get all videos
+GET {{api}}/videos
+### Found a Video
+GET {{api}}/videos/62c231ca374bc0131a9041b2
+
+### Create a video
+POST {{api}}/videos
+Content-Type: application/json 
+
+{
+    "url": "https://www.youtube.com/watch?v=_RZ-T6TxP7w&list=PLZZBP77BbNXb6clJdmn1k7T768j06a9c0&index=26",
+    "title": "MERN",
+    "description": "MERN FAZT"
+}
+
+###
+DELETE {{api}}/videos/62c231ca374bc0131a9041b2
+
+###
+PUT {{api}}/videos/62c231dd374bc0131a9041b4
+Content-Type: application/json 
+
+{
+    "url": "https://www.youtube.com/watch?v=_RZ-T6TxP7w&list=PLZZBP77BbNXb6clJdmn1k7T768j06a9c0&index=26",
+    "title": "MERN",
+    "description": "MERN FAZT MODIFICADO 2"
+}
